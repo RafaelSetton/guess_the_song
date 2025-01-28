@@ -1,20 +1,29 @@
-from txt_to_xl import create_score_table
-from generator import Generator
-from token_handler import load_token
-from gui import App
+from src.__init__ import *
+from src.generator import Generator
+from src.user import User
+from src.txt_to_xl import create_score_table
 from os import path, mkdir
 
-def onSubmit(usernames: map, directory: str, use_cache: bool):
-    token = load_token()
+def main(output_directory: str, input_file: str):
+	# directory = "./out/vizinhos"
+	if not path.exists(output_directory):
+		mkdir(output_directory)
 
-    if not path.exists(directory):
-        mkdir(directory)
+	users = list(User.all_from_file(input_file))
 
-    Generator(token, directory).create_files(usernames, use_cache)
-    create_score_table(directory, list(usernames.values()))
+	Generator(users).create_files(output_directory)
+	create_score_table(output_directory, [user.name for user in users])
+
 
 if __name__ == '__main__':
-    app = App(onSubmit)
-    app.add_components()
-    app.mainloop()
-    
+	out_dir = input("Caminho para o diretório de saída: ")
+	in_file = input("Caminho para o arquivo de entrada: ")
+	cache = None
+	while cache == None:
+		if (temp := input("Usar dados do cache? (S/N) ").upper()) in ('S', 'N'):
+			cache = temp == 'S'
+			cache_path = input("Caminho para o diretório de cache: (Deixe em branco para usar o padrão)")
+			if cache_path:
+				CACHE_DIR = cache_path
+	CACHE_ENABLED = cache
+	main(out_dir, in_file)

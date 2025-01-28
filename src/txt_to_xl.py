@@ -9,7 +9,7 @@ wb = Workbook()
 def add_songs(sheet: Worksheet, directory: str, filename: str) -> int:
     mxw = 0
 
-    with open(f"{directory}/{filename}.txt") as src:
+    with open(f"{directory}/{filename}.txt", encoding='UTF-8') as src:
         idx = 2
         for line in src.readlines():
             sheet[f'A{idx}'] = line

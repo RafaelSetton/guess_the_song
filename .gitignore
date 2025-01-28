@@ -7,5 +7,6 @@ cache/
 
 .env
 
+out/
 *.txt
 !requirements.txt
